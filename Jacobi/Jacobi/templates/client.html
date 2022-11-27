@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+    function get_A()
+    {
+    let A =[];
+    for(let i=1; i <= 5; i++)
+    {
+        for(let j = 1; j <= i; j++)
+        {
+            let a = document.getElementById(String(i)+String(j));
+            let b = document.getElementById(String(j)+String(i));
+        }
+    }
+    document
+        .querySelectorAll(".A_row")
+        .forEach(A_row => 
+        {
+            let row = [];
+            for (child of A_row.children) 
+            {
+                row.push(Number(child.firstChild.value));
+            }
+            A.push(row);
+        });
+    return A;
+}
+
+function get_B()
+{
+    let B =[];
+    document.querySelectorAll(".B_element")
+        .forEach(B_element =>
+        {
+            B.push(Number(B_element.value));
+        });
+    return B;
+}
+
+function show_error(message)
+{
+    document.querySelector("#error").innerText = "Ошибка!" + message;
+}
+
+function output_solution(result)
+{
+      let html = '';
+      for(let i = 0;i < result.length;i++)
+      {
+          html += '<tr><td>' + 'x' +(i+1) + ' = ' + result[i] + '</td></tr>'
+      }
+      document.getElementById('result').innerHTML = html;
+}
+
+
+function Process_system()
+{
+    let spans = document.querySelectorAll("#error")
+    for(let span of spans)
+    {
+        span.textContent = ""
+    }
+    const m_A_A = get_A();
+    const B = get_B();
+    let system = {
+    "A":m_A_A,
+    "B":B
+};
+    fetch('/Process',
+    {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(system)
+    })
+        .then(response =>
+        {
+            if(!response.ok)
+            {
+                throw response;
+            }
+            return response.json();
+        })
+        .then(solution => 
+        {
+            output_solution(solution.result)
+        })
+        .catch(error => error.json().then(error_json => show_error(error_json.message)))
+}
+    </script>
+</head>
+<body style="background-color:rgb(210, 234, 237)">
+    <div>
+        <h1 align="center" style="font-style:oblique">Итерационный метод Якоби</h1>
+    </div>
+    <div class="m_A">
+        <div>
+            <table  align="center" class="m_A_A">
+                <tbody>
+                <tr class = "A_row">
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch; background-color:rgb(194, 220, 234)"><span class="m_A_element"> x</span><sub>1</sub>&nbsp;+&nbsp; </td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>2</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>3</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>4</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>5</sub>&nbsp;=&nbsp;</td>
+                    <td><input class="B_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"></td>
+                </tr>
+                <tr class = "A_row">
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>1</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>2</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>3</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>4</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>5</sub>&nbsp;=&nbsp;</td>
+                    <td><input class="B_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"></td>
+                </tr>
+                <tr class = "A_row">
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>1</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>2</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>3</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>4</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>5</sub>&nbsp;=&nbsp;</td>
+                    <td><input class="B_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"></td>
+                </tr>
+                <tr class = "A_row">
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>1</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>2</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>3</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>4</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>5</sub>&nbsp;=&nbsp;</td>
+                    <td><input class="B_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"></td>
+                </tr>
+                <tr class = "A_row">
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>1</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>2</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>3</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>4</sub>&nbsp;+&nbsp;</td>
+                    <td><input class="m_A_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"><span class="m_A_element"> x</span><sub>5</sub>&nbsp;=&nbsp;</td>
+                    <td><input class="B_element" type="text" style="min-width: 5ch; max-width: 5ch;background-color:rgb(189, 218, 234)"></td>
+                </tr>
+                </tbody>
+            </table >
+        </div>
+
+        </div>
+    </div>
+    <div style="margin-top:15px; text-align: center; " class="buttons";>
+        <input class = "Process_button" type="button" onclick="Process_system()" value = "Решить" style="font-style:oblique; background-color:rgb(172, 207, 226)"/>
+    </div>
+    <div style="margin-top:15px; text-align: center;font-style:oblique">
+            <label> Ответ: </label>
+            <table align="center" id="result" border="0" cellspacing="2">
+            </table>
+        </div>
+        <div>
+              <span id="error"></span>
+        </div>
+    </body>
+</html>
